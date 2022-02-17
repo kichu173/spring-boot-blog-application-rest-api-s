@@ -1,13 +1,12 @@
 package com.sprinboot.blog.service;
 
 import com.sprinboot.blog.dto.PostDto;
-
-import java.util.List;
+import com.sprinboot.blog.dto.PostResponse;
 
 public interface PostService {
     PostDto createPost(PostDto postDto);
 
-    List<PostDto> getAllPosts();
+    PostResponse getAllPosts(int pageNo, int pageSize, String sortBy, String sortDir);
 
     PostDto getPostById(long id);
 
