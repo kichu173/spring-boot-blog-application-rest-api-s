@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
@@ -21,4 +23,8 @@ public class Post {
     private String description;
     @Column(name = "content", nullable = false)
     private String content;
+
+    // one post can have multiple comments
+    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)// mapped by to say owning relationship, where here is 'post'
+    private Set<Comment> comments = new HashSet<>();// Using Set instead of List as it includes duplicates, where Set will not.
 }
