@@ -1,11 +1,13 @@
 package com.sprinboot.blog.controller;
 
+import com.sprinboot.blog.dto.JWTAuthResponse;
 import com.sprinboot.blog.dto.LoginDto;
 import com.sprinboot.blog.dto.SignUpDto;
 import com.sprinboot.blog.entity.Role;
 import com.sprinboot.blog.entity.User;
 import com.sprinboot.blog.repository.RoleRepository;
 import com.sprinboot.blog.repository.UserRepository;
+import com.sprinboot.blog.security.JwtTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -37,13 +39,21 @@ public class AuthController {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JwtTokenProvider tokenProvider;
+
     @PostMapping("/signin")// Try to login with users table username or email and password, then see response is OK(Authenticate with db username and password)
-    public ResponseEntity<String> authenticateUser(@RequestBody LoginDto loginDto) {
+    public ResponseEntity<JWTAuthResponse> authenticateUser(@RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginDto.getUsernameOrEmail(), loginDto.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<>("User signed-in successfully!", HttpStatus.OK);
+
+        // get token form tokenProvider
+        String token = tokenProvider.generateToken(authentication);
+
+        // to return token to the client
+        return ResponseEntity.ok(new JWTAuthResponse(token));
     }
 
     @PostMapping("/signup")
