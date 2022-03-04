@@ -8,6 +8,8 @@ import com.sprinboot.blog.entity.User;
 import com.sprinboot.blog.repository.RoleRepository;
 import com.sprinboot.blog.repository.UserRepository;
 import com.sprinboot.blog.security.JwtTokenProvider;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Collections;
 
+@Api(value="Auth Controller exposes signin and signup REST APIs")
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -42,6 +45,7 @@ public class AuthController {
     @Autowired
     private JwtTokenProvider tokenProvider;
 
+    @ApiOperation(value = "REST API to Register or Signup user to blog app")
     @PostMapping("/signin")// Try to login with users table username or email and password, then see response is OK(Authenticate with db username and password)
     public ResponseEntity<JWTAuthResponse> authenticateUser(@RequestBody LoginDto loginDto) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
@@ -56,6 +60,7 @@ public class AuthController {
         return ResponseEntity.ok(new JWTAuthResponse(token));
     }
 
+    @ApiOperation(value = "REST API to Signin or login user to blog app")
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@RequestBody SignUpDto signUpDto) {
         // add check for username exists in a DB

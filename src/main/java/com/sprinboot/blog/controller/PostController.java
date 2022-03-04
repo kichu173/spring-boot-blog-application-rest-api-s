@@ -5,6 +5,9 @@ import com.sprinboot.blog.dto.PostDtoV2;
 import com.sprinboot.blog.dto.PostResponse;
 import com.sprinboot.blog.service.PostService;
 import com.sprinboot.blog.utils.AppConstants;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +17,7 @@ import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
+@Api(value ="CRUD REST APIs for Post resource")
 @RestController
 @RequestMapping("/api/posts")
 public class PostController {
@@ -25,6 +29,7 @@ public class PostController {
     }
 
     // create blog post
+    @ApiOperation(value = "Create POST rest api")
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<PostDto> createPost(@Valid @RequestBody PostDto postDto) {
@@ -32,6 +37,7 @@ public class PostController {
     }
 
     // get all posts
+    @ApiOperation(value = "Get all POST rest api")
     @GetMapping
     public PostResponse getAllPosts(@RequestParam(value = "pageNo", defaultValue = AppConstants.DEFAULT_PAGE_NUMBER, required = false) int pageNo,
                                     @RequestParam(value = "pageSize", defaultValue = AppConstants.DEFAULT_PAGE_SIZE, required = false) int pageSize,
@@ -42,6 +48,7 @@ public class PostController {
     }
 
     // get post by id
+    @ApiOperation(value = "Get POST by ID rest api")
     @GetMapping("/{id}")
     public ResponseEntity<PostDto> getPostById(@PathVariable(name = "id") long id) {
         return ResponseEntity.ok(postService.getPostById(id));
@@ -125,6 +132,7 @@ public class PostController {
     }
 
     // update post by id rest api
+    @ApiOperation(value = "Update POST by id rest api")
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
     public ResponseEntity<PostDto> updatePost(@Valid @RequestBody PostDto postDto, @PathVariable(name = "id") long id) {
@@ -134,6 +142,7 @@ public class PostController {
     }
 
     // delete post by rest api
+    @ApiOperation(value = "delete POST by id rest api")
     @PreAuthorize("hasRole('ADMIN')")
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deletePost(@PathVariable(name = "id") long id) {
